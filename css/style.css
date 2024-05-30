@@ -1,0 +1,50 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+/* sidebar styling */
+
+.sidebar {
+    margin-top: 2rem;
+    width: 20vw;
+}
+
+.sidebar a {
+    text-decoration: none;
+    transition: all 0.3s ease-in-out;
+    border-radius: 5px;
+    display: flex;
+}
+
+.sidebar a:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.sidebar a span {
+    color: black;
+    font-family: sans-serif;
+    margin-left: 1.2rem !important;
+}
+
+/* sidebar users styling => */
+
+.user-item {
+    text-decoration: none;
+    margin: 8px 2px;
+    color: rgb(57, 49, 49);
+}
+
+/* posts styling */
+
+.post-item div {
+    width: 50rem;
+}
+
+.post-actions button {
+    transition: all 0.3s ease-in-out;
+}
+
+.post-actions button:hover {
+    transform: scale(1.1);
+}

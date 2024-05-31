@@ -3,11 +3,23 @@
     padding: 0;
 }
 
+.navbar {
+    width: 100vw;
+    z-index: 100;
+}
+
 /* sidebar styling */
+
+/* .sidebar-container {
+    right: 14vw;
+    top: 4rem;
+} */
 
 .sidebar {
     margin-top: 2rem;
-    width: 20vw;
+    width: 18rem;
+    top: 4rem;
+    left: 8vw;
 }
 
 .sidebar a {
@@ -37,8 +49,20 @@
 
 /* posts styling */
 
+.explore {
+    max-height: 60vh !important;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    right: 8vw;
+    top: 4rem;
+}
+
+.explore a div img{
+    margin: 5px 1px;
+}
+
 .post-item div {
-    width: 50rem;
+    width: 40vw;
 }
 
 .post-actions button {
@@ -48,3 +72,87 @@
 .post-actions button:hover {
     transform: scale(1.1);
 }
+
+/* media query for sidebar => */
+
+@media only screen and (max-width: 1350px) {
+    .explore {
+        display: none;
+    }
+    .space-2 {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 1230px) {
+    .sidebar-container {
+        right: 10vw;
+    }
+}
+
+@media only screen and (max-width: 1230px) {
+    .sidebar-container {
+        right: 10vw;
+    }
+}
+
+@media only screen and (max-width: 991px) {
+    .sidebar-container {
+        right: 6vw;
+    }
+    .posts {
+        margin-left: -1rem;
+    }
+    .account-dropdown {
+        margin: 1rem 0rem;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    .sidebar-container {
+        display: none;
+    }
+    .post-item div {
+        width: 100vw;
+    }
+    .space {
+        display: none;
+    }
+    .main-container{
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .posts-container {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .posts {
+        margin: 100px 0px !important;
+    }
+    .logo {
+        margin: 5px !important;
+        width: 60px;
+        height: 60px;
+    }
+}
+
+/* mobile navbar => */
+
+.mobile-navbar {
+    display: none;
+}
+
+/* responsiveness for mobile navbar => */
+
+@media only screen and (max-width: 768px) {
+    .mobile-navbar {
+        display: flex;
+    }
+}
+
+@media only screen and (max-width: 339px) {
+    .right-mobile-nav {
+        display: none;
+    }
+}
+

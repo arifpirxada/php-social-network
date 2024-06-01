@@ -5,92 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Message - ChitKit</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/message.css">
 </head>
 
 <body class="bg-light">
-    <header>
-        <!-- Navbar -->
-        <nav class="navbar position-fixed navbar-expand-lg bg-body-tertiary px-4">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/"><img width="80" height="80" class="logo rounded-circle mx-5"
-                        src="img/brand/ChitKit-logo.png" alt="logo"></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- tabs -->
-                    <ul class="nav nav-tabs mx-3">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Latest</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Following</a>
-                        </li>
-                    </ul>
-                    <div class="nav-item account-dropdown dropdown mx-5">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                            aria-expanded="false">
-                            More
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="/profile.html"><img width="20" height="20" class="mx-2"
-                                        src="img/icons/user-icon.png" alt="">Profile</a></li>
-                            <li><a class="dropdown-item" href="#"><img width="20" height="20" class="mx-2"
-                                        src="img/icons/logout-icon.png" alt="">Logout</a></li>
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
-                            <li><a class="dropdown-item" href="/create-post.html"><img class="mx-1" src="img/icons/create-post-icon.png"
-                                        width="23" height="23" alt="icon">Create Post</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </nav>
-
-        <!-- Navigation for small and medium devices -->
-        <nav class="navbar mobile-navbar navbar-light bg-light position-fixed bottom-0 px-4 py-0">
-            <a href="/" class="mobile-nav-item navbar-brand p-3 flex align-items-center"><img width="30" height="30"
-                    src="/img/icons/home-icon.png" alt="home icon"></a>
-            <a href="/search.html" class="mobile-nav-item navbar-brand p-3 flex align-items-center"><img width="23"
-                    height="23" src="/img/icons/search-icon.png" alt=""></a>
-            <a href="/message.html" class="mobile-nav-item navbar-brand p-3 flex align-items-center"><img width="23"
-                    height="23" src="/img/icons/message-icon.png" alt=""></a>
-            <a href="/profile.html" class="mobile-nav-item right-mobile-nav navbar-brand p-3 flex align-items-center"><img
-                    width="23" height="23" src="/img/icons/user-icon.png" alt=""></a>
-        </nav>
-        <!-- Navbar end -->
-    </header>
+    <?php require "partials/navbar.php" ?>
 
     <div class="container main-container d-flex gap-5 justify-content-center">
 
-        <!-- Sidebar -->
-        <div class="sidebar-container">
-
-            <div class="sidebar shadow-sm position-fixed rounded p-4 list-unstyled d-flex flex-column bg-white">
-                <a href="/" class="p-3 flex align-items-center"><img width="30" height="30"
-                        src="/img/icons/home-icon.png" alt="home icon"><span class="m-2">Home</span></a>
-                <a href="/search.html" class="p-3 flex align-items-center"><img width="30" height="30"
-                        src="/img/icons/search-icon.png" alt=""><span class="m-2">Search</span></a>
-                <a href="/message.html" class="p-3 flex align-items-center"><img width="30" height="30"
-                        src="/img/icons/message-icon.png" alt=""><span class="m-2">Messages</span></a>
-                <a href="/profile.html" class="p-3 flex align-items-center"><img width="30" height="30"
-                        src="/img/icons/user-icon.png" alt=""><span class="m-2">Profile</span></a>
-                <a href="/create-post.html" class="p-3 flex align-items-center"><img width="30" height="30"
-                        src="/img/icons/create-post-icon.png" alt=""><span class="m-2">Create Post</span></a>
-            </div>
-
-        </div>
-
-        <!-- Sidebar end -->
-
-        <div class="space" style="width: 14rem;"></div>
+        <?php
+        $hideExplore = true;
+        require "partials/sidebar.php"
+        ?>
 
         <!-- Posts -->
         <div class="posts" style="margin-top: 7rem;">
@@ -99,8 +27,7 @@
                 aria-controls="offcanvasRight">Recent</button>
             </div> -->
 
-            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight"
-                aria-labelledby="offcanvasRightLabel">
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="offcanvasRightLabel">Recent conversations</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -124,8 +51,7 @@
                         <div class="inbox_chat">
                             <div class="chat_list active_chat">
                                 <div class="chat_people">
-                                    <div class="chat_img"> <img
-                                            src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                                    <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
                                     </div>
                                     <div class="chat_ib">
                                         <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
@@ -136,8 +62,7 @@
                             </div>
                             <div class="chat_list">
                                 <div class="chat_people">
-                                    <div class="chat_img"> <img
-                                            src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                                    <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
                                     </div>
                                     <div class="chat_ib">
                                         <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
@@ -148,8 +73,7 @@
                             </div>
                             <div class="chat_list">
                                 <div class="chat_people">
-                                    <div class="chat_img"> <img
-                                            src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                                    <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
                                     </div>
                                     <div class="chat_ib">
                                         <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
@@ -160,8 +84,7 @@
                             </div>
                             <div class="chat_list">
                                 <div class="chat_people">
-                                    <div class="chat_img"> <img
-                                            src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                                    <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
                                     </div>
                                     <div class="chat_ib">
                                         <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
@@ -172,8 +95,7 @@
                             </div>
                             <div class="chat_list">
                                 <div class="chat_people">
-                                    <div class="chat_img"> <img
-                                            src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                                    <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
                                     </div>
                                     <div class="chat_ib">
                                         <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
@@ -184,8 +106,7 @@
                             </div>
                             <div class="chat_list">
                                 <div class="chat_people">
-                                    <div class="chat_img"> <img
-                                            src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                                    <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
                                     </div>
                                     <div class="chat_ib">
                                         <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
@@ -196,8 +117,7 @@
                             </div>
                             <div class="chat_list">
                                 <div class="chat_people">
-                                    <div class="chat_img"> <img
-                                            src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                                    <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
                                     </div>
                                     <div class="chat_ib">
                                         <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
@@ -232,8 +152,7 @@
                             <div class="inbox_chat">
                                 <div class="chat_list active_chat">
                                     <div class="chat_people">
-                                        <div class="chat_img"> <img
-                                                src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                                        <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
                                         </div>
                                         <div class="chat_ib">
                                             <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
@@ -244,8 +163,7 @@
                                 </div>
                                 <div class="chat_list">
                                     <div class="chat_people">
-                                        <div class="chat_img"> <img
-                                                src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                                        <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
                                         </div>
                                         <div class="chat_ib">
                                             <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
@@ -256,8 +174,7 @@
                                 </div>
                                 <div class="chat_list">
                                     <div class="chat_people">
-                                        <div class="chat_img"> <img
-                                                src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                                        <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
                                         </div>
                                         <div class="chat_ib">
                                             <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
@@ -268,8 +185,7 @@
                                 </div>
                                 <div class="chat_list">
                                     <div class="chat_people">
-                                        <div class="chat_img"> <img
-                                                src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                                        <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
                                         </div>
                                         <div class="chat_ib">
                                             <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
@@ -280,8 +196,7 @@
                                 </div>
                                 <div class="chat_list">
                                     <div class="chat_people">
-                                        <div class="chat_img"> <img
-                                                src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                                        <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
                                         </div>
                                         <div class="chat_ib">
                                             <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
@@ -292,8 +207,7 @@
                                 </div>
                                 <div class="chat_list">
                                     <div class="chat_people">
-                                        <div class="chat_img"> <img
-                                                src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                                        <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
                                         </div>
                                         <div class="chat_ib">
                                             <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
@@ -304,8 +218,7 @@
                                 </div>
                                 <div class="chat_list">
                                     <div class="chat_people">
-                                        <div class="chat_img"> <img
-                                                src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
+                                        <div class="chat_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil">
                                         </div>
                                         <div class="chat_ib">
                                             <h5>Sunil Rajput <span class="chat_date">Dec 25</span></h5>
@@ -318,13 +231,11 @@
                         </div>
                         <div class="mesgs">
                             <div class="d-flex justify-content-end px-4 py-1">
-                                <button class="btn btn-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                                aria-controls="offcanvasRight">Recent</button>
+                                <button class="btn btn-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">Recent</button>
                             </div>
                             <div class="msg_history">
                                 <div class="incoming_msg">
-                                    <div class="incoming_msg_img"> <img
-                                            src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                                    <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
                                     <div class="received_msg">
                                         <div class="received_withd_msg">
                                             <p>Test which is a new approach to have all
@@ -341,8 +252,7 @@
                                     </div>
                                 </div>
                                 <div class="incoming_msg">
-                                    <div class="incoming_msg_img"> <img
-                                            src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                                    <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
                                     <div class="received_msg">
                                         <div class="received_withd_msg">
                                             <p>Test, which is a new approach to have</p>
@@ -357,8 +267,7 @@
                                     </div>
                                 </div>
                                 <div class="incoming_msg">
-                                    <div class="incoming_msg_img"> <img
-                                            src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
+                                    <div class="incoming_msg_img"> <img src="https://ptetutorials.com/images/user-profile.png" alt="sunil"> </div>
                                     <div class="received_msg">
                                         <div class="received_withd_msg">
                                             <p>We work directly with our designers and suppliers,
@@ -372,8 +281,7 @@
                             <div class="type_msg">
                                 <div class="input_msg_write">
                                     <input style="outline: none;" type="text" class="write_msg" placeholder="Type a message" />
-                                    <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o"
-                                            aria-hidden="true"></i></button>
+                                    <button class="msg_send_btn" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
                                 </div>
                             </div>
                         </div>
@@ -388,9 +296,7 @@
 
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 
 </html>

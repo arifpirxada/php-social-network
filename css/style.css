@@ -199,6 +199,10 @@ img.profile-photo-lg{
     min-width: 60vw;       
 }
 
+.about-container {
+    max-width: 45vw !important;
+}
+
 .follow-btn:hover {
     color: rgb(16, 15, 15) !important;
 }
@@ -222,6 +226,10 @@ img.profile-photo-lg{
 
     .profile-note-card {
         width: 87vw;
+    }
+
+    .about-container {
+        max-width: 80vw !important;
     }
 }
 

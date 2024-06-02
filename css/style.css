@@ -211,6 +211,10 @@ img.profile-photo-lg{
     width: 35vw;
 }
 
+.w-48 {
+    width: 48% !important;
+}
+
 @media only screen and (max-width: 992px) {
     #profile-sub-container {
         min-width: 2vw;

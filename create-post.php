@@ -1,3 +1,4 @@
+<?php require "partials/helper.php" ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,69 +16,134 @@
     <div class="container main-container create-posts-main-container d-flex gap-5 justify-content-center">
         <?php require "partials/sidebar.php" ?>
 
+        <?php
+        // Upload a post =>
+
+        $user_id = $_SESSION["user_id"];
+        $type_err = false;
+        $show_file_err = false;
+        $size_err = false;
+        $num_of_files_err = false;
+        $result_err = false;
+        $upload_success = false;
+
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $help = new Helper();
+            $heading = "";
+            $content = "";
+            if (isset($_POST["post-heading"])) {
+                $heading = $help->test_input($_POST["post-heading"]);
+            }
+            if (isset($_POST["post-content"])) {
+                $content = $help->test_input($_POST["post-content"]);
+            }
+
+            // Upload Files =>
+            $file_paths_array = [];
+            if (isset($_FILES["files"]) && !empty($_FILES["files"]["name"][0])) {
+                $number_of_files = 0;
+                // The below loop checks for erros for all files
+                foreach ($_FILES["files"]["name"] as $key => $value) {
+                    $file = $_FILES["files"];
+                    $file_name = $file["name"][$key];
+                    $file_tmp_name = $file["tmp_name"][$key];
+                    $file_size = $file["size"][$key];
+                    $file_err = $file["error"][$key];
+                    $file_type = $file["type"][$key];
+
+                    // Video types : mp4, mkv, mov, webm, avi
+                    $allowed_file_types = array("jpeg", "jpg", "png", "mp4", "mkv", "mov", "webm", "avi");
+                    $file_ex = explode(".", $file_name);
+                    $file_ext = strtolower(end($file_ex));
+
+                    if (!in_array($file_ext, $allowed_file_types)) {
+                        $type_err = true;
+                        break;
+                    } elseif ($file_err != 0) {
+                        $show_file_err = true;
+                        break;
+                    } elseif ($file_size > 524288000) {
+                        // 524288000 : 500mb
+                        $size_err = true;
+                        break;
+                    }
+                    $number_of_files++;
+                }
+
+                if ($number_of_files > 10) {
+                    $num_of_files_err = true;
+                }
+
+                /* If any error related to type, size or file error occured 
+                in any of the files then the files will not be uploaded*/
+                if (!$type_err && !$show_file_err && !$size_err && !$num_of_files_err) {
+
+                    foreach ($_FILES["files"]["name"] as $key => $value) {
+                        $file = $_FILES["files"];
+                        $file_name = $file["name"][$key];
+                        $file_tmp_name = $file["tmp_name"][$key];
+                        $file_ex = explode(".", $file_name);
+                        $file_ext = strtolower(end($file_ex));
+
+                        $uniqueId = uniqid('', true);
+                        $new_file_name = $user_id . "-" . $uniqueId . '.' . $file_ext;
+
+                        $file_path = "uploads/posts/" . $new_file_name;
+                        $move_file = move_uploaded_file($file_tmp_name, $file_path);
+                        if (!$move_file) {
+                            $show_file_err = true;
+                        } else {
+                            array_push($file_paths_array, $file_path);
+                        }
+                    }
+                }
+            }
+
+            // Convert file path array into json to store in MySQL
+            $file_paths_json = json_encode($file_paths_array);
+            $sql = "INSERT INTO `posts`(`heading`, `content`, `file_json_array`, `user_id`) VALUES (?, ?, ?, ?)";
+            // using stmt to escape quotation marks
+            $stmt = $con->prepare($sql);
+            $stmt->bind_param("sssi", $heading, $content, $file_paths_json, $user_id);
+
+            if ($stmt->execute()) {
+                $upload_success = true;
+            } else {
+                $result_err = true;
+                /* ?> <div class="position-fixed" style="top: 32rem; z-index:300"><?php echo "MySQL Error: " . mysqli_error($con);?></div><?php */
+            }
+        }
+        ?>
+
         <!-- Posts -->
         <div class="posts create-posts-container" style="margin-top: 7rem;">
-            <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">Photo</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">Slides</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">Note</button>
-                </li>
-            </ul>
-            <div class="tab-content" id="pills-tabContent">
-                <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
-                    <!-- PHOTO => -->
-                    <form>
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="photo-heading" name="photo-heading" placeholder="name@example.com">
-                            <label for="photo-heading">Heading</label>
-                        </div>
-                        <div class="form-floating">
-                            <textarea class="form-control" name="photo-content" placeholder="write your content" id="photo-content" style="height: 100px"></textarea>
-                            <label for="photo-content">Content</label>
-                        </div>
-                        <!-- <label for="photo-file" class="form-label">Upload</label> -->
-                        <input name="photo-file" class="form-control form-control-lg my-3" id="photo-file" type="file" />
-                        <button type="submit" class="my-3 w-100 btn btn-primary">Submit</button>
-                    </form>
-                    <!-- PHOTO END -->
+            <!-- SLIDES => -->
+            <form id="slides-form" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]) ?>" method="post" enctype="multipart/form-data">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="post-heading" name="post-heading" placeholder="name@example.com">
+                    <label for="post-heading">Heading</label>
                 </div>
-                <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
-                    <!-- SLIDES => -->
-                    <form id="slides-form">
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="slide-heading" name="slide-heading" placeholder="name@example.com">
-                            <label for="slide-heading">Heading</label>
-                        </div>
-                        <div class="form-floating">
-                            <textarea class="form-control" name="slide-content" placeholder="write your content" id="slide-content" style="height: 100px"></textarea>
-                            <label for="slide-content">Content</label>
-                        </div>
-                        <input name="name=" filefield[]" multiple="multiple" class="form-control form-control-lg my-3" id="slide-file" type="file" />
-                        <button type="submit" class="my-3 w-100 btn btn-primary">Submit</button>
-                    </form>
-                    <!-- SLIDES END -->
+                <div class="form-floating">
+                    <textarea class="form-control" name="post-content" placeholder="write your content" id="post-content" style="height: 100px"></textarea>
+                    <label for="post-content">Content</label>
                 </div>
-                <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab" tabindex="0">
-                    <!-- NOTE => -->
-                    <form>
-                        <div class="form-floating mb-3">
-                            <input type="text" class="form-control" id="note-heading" name="note-heading" placeholder="name@example.com">
-                            <label for="note-heading">Heading</label>
-                        </div>
-                        <div class="form-floating">
-                            <textarea class="form-control" name="note-content" placeholder="write your content" id="note-content" style="height: 100px"></textarea>
-                            <label for="note-content">Content</label>
-                        </div>
-                        <button type="submit" class="my-3 w-100 btn btn-primary">Submit</button>
-                    </form>
-                    <!-- NOTE END -->
-                </div>
-            </div>
+                <input name="files[]" multiple="multiple" accept="image/*, video/*" class="form-control form-control-lg my-3" id="slide-file" type="file" />
+                <button type="submit" class="my-3 w-100 btn rounded-0 btn-primary">Post</button>
+                <?php if ($type_err) { ?>
+                    <div class="mt-3 alert text-center alert-warning" role="alert">Only jpeg, jpg, png, mp4, mkv, mov, webm & avi file types are allowed!</div>
+                <?php } elseif ($show_file_err) { ?>
+                    <div class="mt-3 alert text-center alert-warning" role="alert">An error occured while uploading your file!</div>
+                <?php } elseif ($size_err) { ?>
+                    <div class="mt-3 alert text-center alert-warning" role="alert">File should be less than 500mb!</div>
+                <?php } elseif ($num_of_files_err) { ?>
+                    <div class="mt-3 alert text-center alert-warning" role="alert">You can only upload 10 files.</div>
+                <?php } elseif ($result_err) { ?>
+                    <div class="mt-3 alert text-center alert-warning" role="alert">Internal server error!</div>
+                <?php } elseif ($upload_success) { ?>
+                    <div class="mt-3 alert text-center alert-success" role="alert">Your post has been uploaded successfully!</div>
+                <?php } ?>
+            </form>
+            <!-- SLIDES END -->
         </div>
         <!-- Posts end -->
 

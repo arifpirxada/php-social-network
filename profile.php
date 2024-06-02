@@ -26,19 +26,7 @@
 
     $file_path = "";
 
-    if (isset($_FILES["update-profile-picture"])) {
-      // Delete previous photo if exists =>
-
-      $sql = "SELECT profile_picture FROM users WHERE `id` = $user_id";
-      $result = mysqli_query($con, $sql);
-      if ($result) {
-        $row = mysqli_fetch_assoc($result);
-        $previous_file_path = $row["profile_picture"];
-        
-        if (file_exists($previous_file_path) && $previous_file_path != "") {
-          unlink($previous_file_path);
-        }
-      }
+    if (isset($_FILES["update-profile-picture"]) && !empty($_FILES["update-profile-picture"]["tmp_name"])) {
 
       // Update Photo =>
       $photo = $_FILES["update-profile-picture"];
@@ -48,51 +36,68 @@
       $photo_err = $photo["error"];
       $photo_type = $photo["type"];
 
-      $allowed_files_types = array("jpeg", "jpg", "png");
+      $allowed_file_types = array("jpeg", "jpg", "png");
       $photo_ex = explode(".", $photo_name);
       $photo_ext = strtolower(end($photo_ex));
 
-      if (!in_array($photo_ext, $allowed_files_types)) {
+      if (!in_array($photo_ext, $allowed_file_types)) {
         $type_err = true;
+      } elseif ($photo_err != 0) {
+        $show_photo_err = true;
+      } elseif ($photo_size > 5242880) {
+        // 5242880: 5mb
+        $size_err = true;
       } else {
-        if ($photo_err != 0) {
+        $uniqueId = uniqid('', true);
+        $new_file_name = $user_id . "-" . $uniqueId . '.' . $photo_ext;
+
+        $file_path = "uploads/profile/" . $new_file_name;
+        $move_file = move_uploaded_file($photo_tmp_name, $file_path);
+        if (!$move_file) {
           $show_photo_err = true;
         } else {
-          if ($photo_size > 5242880) {
-            $size_err = true;
-          } else {
-            $uniqueId = uniqid('', true);
-            $new_file_name = $user_id . "-" . $uniqueId . '.' . $photo_ext;
+          // Delete previous photo if exists =>
+          $sql = "SELECT profile_picture FROM users WHERE `id` = $user_id";
+          $result = mysqli_query($con, $sql);
+          if ($result) {
+            $row = mysqli_fetch_assoc($result);
+            $previous_file_path = $row["profile_picture"];
 
-            $file_path = "uploads/profile/" . $new_file_name;
-            $move_file = move_uploaded_file($photo_tmp_name, $file_path);
-            if (!$move_file) {
-              $show_photo_err = true;
-            } else {
+            if (file_exists($previous_file_path) && $previous_file_path != "") {
+              unlink($previous_file_path);
             }
           }
         }
-      }
 
-      $help = new Helper();
-      $name = $help->test_input($_POST["update-name"]);
-      $about = $help->test_input($_POST["update-about"]);
-      $sql = "UPDATE `users` SET `name` = '$name', `about` = '$about', `profile_picture` = '$file_path' WHERE `users`.`id` = '$user_id'";
-      $result = mysqli_query($con, $sql);
-      if (!$result) { ?>
-        <script>
-          alert("Internal server error!");
-        </script>
-  <?php
       }
+    } // isset curly bracket
+
+    $help = new Helper();
+    $name = $help->test_input($_POST["update-name"]);
+    $about = $help->test_input($_POST["update-about"]);
+    $sql = "UPDATE `users` SET `name` = '$name', `about` = '$about', `profile_picture` = '$file_path' WHERE `users`.`id` = '$user_id'";
+    if ($file_path == "") {
+      $sql = "UPDATE `users` SET `name` = '$name', `about` = '$about' WHERE `users`.`id` = '$user_id'";
+    }
+    $result = mysqli_query($con, $sql);
+    if (!$result) { ?>
+      <script>
+        alert("Internal server error!");
+      </script>
+  <?php
     }
   } ?>
 
   <?php
-  // Fetch user details =>
-  $user_array = array("name" => "", "about" => "", "profile_picture" => "");
 
-  $sql = "SELECT name, about, profile_picture FROM users WHERE `id` = '$user_id'";
+  $user_array = array("name" => "", "about" => "", "profile_picture" => "");
+  $current_user_id = $user_id;
+  if (isset($_GET["user_id"]) && !empty($_GET["user_id"])) {
+    $current_user_id = $_GET["user_id"];
+  }
+  // Fetch user details =>
+
+  $sql = "SELECT name, about, profile_picture FROM users WHERE `id` = '$current_user_id'";
   $result = mysqli_query($con, $sql);
   if (!$result) {
   ?>
@@ -107,6 +112,33 @@
     $user_array["profile_picture"] = $row["profile_picture"];
   }
   ?>
+
+  <?php
+  // Fetch user posts
+
+  $media_posts = [];
+  $note_posts = [];
+
+  $sql = "SELECT * FROM posts WHERE user_id = '$current_user_id'";
+  $result = mysqli_query($con, $sql);
+
+  if ($result) {
+    while ($row = mysqli_fetch_assoc($result)) {
+      $file_paths = json_decode($row["file_json_array"], true); // true tells to php to decode as associative array.
+      if (json_last_error() === JSON_ERROR_NONE) {
+        $length = count($file_paths);
+        if ($length > 0) {
+          array_push($media_posts, ["id" => $row["id"], "heading" => $row["heading"], "content" => $row["content"], "file_paths" => $file_paths]);
+        } else {
+          array_push($note_posts, ["id" => $row["id"], "heading" => $row["heading"], "content" => $row["content"]]);
+        }
+      }
+    }
+  } else {
+  ?> <script>
+      console.log("An error occured while fetching user posts")
+    </script>
+  <?php } ?>
 
   <!-- MODAL => -->
   <!-- Modal -->
@@ -167,26 +199,87 @@
                   </div>
                   <div class="ms-3" style="margin-top: 80px;">
                     <h5><?php echo $user_array['name'] ?></h5>
-                    <!-- <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn follow-btn btn-outline-light text-light" data-mdb-ripple-color="dark" style="z-index: 1;">
-                      Follow
-                    </button> -->
-                    <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" data-mdb-button-init data-mdb-ripple-init class="btn follow-btn btn-outline-light text-light" data-mdb-ripple-color="dark" style="z-index: 1;">
-                      Edit
-                    </button>
+                    <?php
+                    if (isset($_GET["user_id"]) && !empty($_GET["user_id"])) {
+                      // Check if already followed =>
+                      $sql = "SELECT COUNT(*) AS follower_num FROM followers WHERE user_id = '$current_user_id' AND follower_id = '$user_id'";
+                      $result = mysqli_query($con, $sql);
+                      $followed = false;
+                      if ($result) {
+                        $row = mysqli_fetch_assoc($result);
+                        $num = $row["follower_num"];
+                        if ($num > 0) {
+                          $followed = true;
+                        }
+                      }
+
+                      if ($followed) {
+                    ?>
+                        <button onclick="unfollow(<?php echo $user_id ?>, <?php echo $current_user_id ?>)" type="button" data-mdb-button-init data-mdb-ripple-init class="btn follow-btn btn-outline-light text-light" data-mdb-ripple-color="dark" style="z-index: 1;">
+                          Unfollow
+                        </button>
+                      <?php
+                      } else {
+                      ?>
+                        <button onclick="follow(<?php echo $user_id ?>, <?php echo $current_user_id ?>)" type="button" data-mdb-button-init data-mdb-ripple-init class="btn follow-btn btn-outline-light text-light" data-mdb-ripple-color="dark" style="z-index: 1;">
+                          Follow
+                        </button>
+                      <?php
+                      }
+                    } else { ?>
+                      <button type="button" data-bs-toggle="modal" data-bs-target="#editModal" data-mdb-button-init data-mdb-ripple-init class="btn follow-btn btn-outline-light text-light" data-mdb-ripple-color="dark" style="z-index: 1;">
+                        Edit
+                      </button>
+                    <?php
+                    }
+                    ?>
                   </div>
                 </div>
                 <div class="p-4 text-black bg-body-tertiary">
                   <div class="d-flex justify-content-end text-center py-1 text-body">
                     <div>
-                      <p class="mb-1 h5">253</p>
+                      <?php
+                      // Fetch no of uploaded posts =>
+                      $sql = "SELECT COUNT(*) AS num_of_posts FROM posts WHERE user_id  = '$current_user_id'";
+                      $result = mysqli_query($con, $sql);
+
+                      $num_of_posts = 0;
+                      if ($result) {
+                        $row = mysqli_fetch_assoc($result);
+                        $num_of_posts = $row["num_of_posts"];
+                      }
+                      ?>
+                      <p class="mb-1 h5"><?php echo $num_of_posts ?></p>
                       <p class="small text-muted mb-0">Posts</p>
                     </div>
                     <div class="px-3">
-                      <p class="mb-1 h5">1026</p>
+                      <?php
+                      // Fetch no of followers =>
+                      $sql = "SELECT COUNT(*) AS num_of_followers FROM followers WHERE user_id = '$current_user_id'";
+                      $result = mysqli_query($con, $sql);
+
+                      $num_of_followers = 0;
+                      if ($result) {
+                        $row = mysqli_fetch_assoc($result);
+                        $num_of_followers = $row["num_of_followers"];
+                      }
+                      ?>
+                      <p class="mb-1 h5"><?php echo $num_of_followers ?></p>
                       <p class="small text-muted mb-0">Followers</p>
                     </div>
                     <div>
-                      <p class="mb-1 h5">478</p>
+                      <?php
+                      // Fetch no of following =>
+                      $sql = "SELECT COUNT(*) AS num_of_following FROM followers WHERE follower_id = '$current_user_id'";
+                      $result = mysqli_query($con, $sql);
+
+                      $num_of_following = 0;
+                      if ($result) {
+                        $row = mysqli_fetch_assoc($result);
+                        $num_of_following = $row["num_of_following"];
+                      }
+                      ?>
+                      <p class="mb-1 h5"><?php echo $num_of_following ?></p>
                       <p class="small text-muted mb-0">Following</p>
                     </div>
                   </div>
@@ -212,75 +305,43 @@
                   <div class="tab-content" id="pills-tabContent">
                     <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab" tabindex="0">
                       <!-- Media -->
-                      <div class="row g-2">
-                        <div class="col mb-2">
-                          <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(112).webp" alt="image 1" class="w-100 rounded-3">
-                        </div>
-                        <div class="col mb-2">
-                          <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(107).webp" alt="image 1" class="w-100 rounded-3">
-                        </div>
+                      <div class="d-flex flex-wrap gap-2">
+                        <?php
+                        foreach ($media_posts as $key => $value) {
+                          if (isset($media_posts[$key]["file_paths"][0])) { ?>
+                            <a href="posts.php?post_id=<?php echo $media_posts[$key]["id"] ?>" class="w-48">
+                              <img src="<?php echo $media_posts[$key]["file_paths"][0] ?>" alt="post image" class="w-100 rounded-1">
+                            </a>
+                        <?php }
+                        } ?>
                       </div>
-                      <div class="row g-2">
-                        <div class="col">
-                          <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(108).webp" alt="image 1" class="w-100 rounded-3">
-                        </div>
-                        <div class="col">
-                          <img src="https://mdbcdn.b-cdn.net/img/Photos/Lightbox/Original/img%20(114).webp" alt="image 1" class="w-100 rounded-3">
-                        </div>
-                      </div>
+
                       <!-- Media ends -->
                     </div>
                     <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab" tabindex="0">
                       <!-- Notes -->
                       <div class="flex justify-content-center">
 
-                        <div class="card my-2 profile-note-card">
-                          <div class="card-body">
-                            <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="card-link">Read more &rarr;</a>
+                        <?php
+                        foreach ($note_posts as $key => $value) { ?>
+                          <script>
+                            console.log("what is this")
+                          </script>
+                          <div class="card my-2 profile-note-card">
+                            <div class="card-body">
+                              <?php
+                              if (!empty($note_posts[$key]["heading"])) { ?>
+                                <h6 class="card-subtitle mb-2 text-body-secondary"><?php echo substr($note_posts[$key]["heading"], 0, 40) . "..." ?></h6>
+                              <?php } ?>
+                              <?php
+                              if (!empty($note_posts[$key]["content"])) { ?>
+                                <p class="card-text"><?php echo substr($note_posts[$key]["content"], 0, 100) . "..." ?></p>
+                              <?php } ?>
+                              <a href="posts.php?post_id=<?php echo $note_posts[$key]["id"] ?>" class="card-link">Read more &rarr;</a>
+                            </div>
                           </div>
-                        </div>
+                        <?php } ?>
 
-                        <div class="card my-2 profile-note-card">
-                          <div class="card-body">
-                            <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="card-link">Read more &rarr;</a>
-                          </div>
-                        </div>
-
-                        <div class="card my-2 profile-note-card">
-                          <div class="card-body">
-                            <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="card-link">Read more &rarr;</a>
-                          </div>
-                        </div>
-
-                        <div class="card my-2 profile-note-card">
-                          <div class="card-body">
-                            <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="card-link">Read more &rarr;</a>
-                          </div>
-                        </div>
-
-                        <div class="card my-2 profile-note-card">
-                          <div class="card-body">
-                            <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="card-link">Read more &rarr;</a>
-                          </div>
-                        </div>
-
-                        <div class="card my-2 profile-note-card">
-                          <div class="card-body">
-                            <h6 class="card-subtitle mb-2 text-body-secondary">Card subtitle</h6>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="card-link">Read more &rarr;</a>
-                          </div>
-                        </div>
                       </div>
                       <!-- Notes end -->
                     </div>
@@ -324,6 +385,7 @@
   }
   ?>
 
+  <script src="js/main.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 

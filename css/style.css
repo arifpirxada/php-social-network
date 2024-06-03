@@ -65,11 +65,11 @@
     width: 40vw;
 }
 
-.post-actions button {
+.post-actions button, .post-actions a {
     transition: all 0.3s ease-in-out;
 }
 
-.post-actions button:hover {
+.post-actions button:hover, .post-actions a:hover {
     transform: scale(1.1);
 }
 

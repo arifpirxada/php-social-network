@@ -119,7 +119,7 @@
   $media_posts = [];
   $note_posts = [];
 
-  $sql = "SELECT * FROM posts WHERE user_id = '$current_user_id'";
+  $sql = "SELECT * FROM posts WHERE user_id = '$current_user_id' ORDER BY post_date DESC";
   $result = mysqli_query($con, $sql);
 
   if ($result) {

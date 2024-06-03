@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 02, 2024 at 07:17 PM
+-- Generation Time: Jun 03, 2024 at 08:21 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -24,6 +24,31 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `comments`
+--
+
+CREATE TABLE `comments` (
+  `id` int(11) NOT NULL,
+  `comment` text NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `user_name` varchar(30) NOT NULL,
+  `date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`id`, `comment`, `post_id`, `user_id`, `user_name`, `date`) VALUES
+(1, 'Great', 27, 8, 'Henry', '2024-06-03 22:40:21'),
+(2, 'Nice post', 27, 8, 'Henry', '2024-06-03 22:43:32'),
+(3, 'Very true', 26, 8, 'Henry', '2024-06-03 22:46:01'),
+(4, 'So beautiful', 1, 8, 'Henry', '2024-06-03 22:46:54');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `followers`
 --
 
@@ -40,10 +65,37 @@ CREATE TABLE `followers` (
 INSERT INTO `followers` (`id`, `user_id`, `follower_id`) VALUES
 (5, 5, 8),
 (7, 5, 9),
+(11, 6, 7),
+(13, 6, 8),
+(12, 6, 10),
 (9, 7, 5),
 (6, 7, 8),
 (10, 7, 10),
 (8, 8, 9);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `likes`
+--
+
+CREATE TABLE `likes` (
+  `id` int(11) NOT NULL,
+  `post_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `likes`
+--
+
+INSERT INTO `likes` (`id`, `post_id`, `user_id`) VALUES
+(10, 3, 10),
+(11, 4, 10),
+(7, 26, 8),
+(9, 26, 10),
+(12, 28, 8),
+(8, 28, 10);
 
 -- --------------------------------------------------------
 
@@ -55,7 +107,7 @@ CREATE TABLE `posts` (
   `id` int(11) NOT NULL,
   `heading` varchar(300) NOT NULL,
   `content` text NOT NULL,
-  `file_json_array` varchar(700) NOT NULL,
+  `file_json_array` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`file_json_array`)),
   `user_id` int(11) NOT NULL,
   `post_date` datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -101,7 +153,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `password`, `about`, `profile_picture`) VALUES
 (5, 'test', 'test@gmail.com', '$2y$10$o4jvYlhqb0glLPbuJO8Ehem/JGlpQ4Bss92VvzZMZbBFA9nkte6Nm', 'this is test about', 'uploads/profile/5-665ca56913fb86.12184911.jpg'),
-(6, 'Arif', 'arif@gmail.com', '$2y$10$qfNeVjJH59r6YtuzCRHKHuv4DUHfqheDxMzzvY2lw6DKJa7ecC5TC', '', ''),
+(6, 'Arif', 'arif@gmail.com', '$2y$10$qfNeVjJH59r6YtuzCRHKHuv4DUHfqheDxMzzvY2lw6DKJa7ecC5TC', 'Developer of chitkit.\r\nWebsite: https://arifpirxada.netlify.app/', ''),
 (7, 'Justine', 'justine@gmail.com', '$2y$10$pOlppwnsK4DIk9uIaAmdXutCk36t7pYZ6xMD8OY0Un9kPJbfJqEOO', 'Not all who wander are wanderful!', 'uploads/profile/7-665c4d52eaddb7.97001894.jpg'),
 (8, 'Henry', 'henry@gmail.com', '$2y$10$zfWfdWxkYL6trZ62v2w85.dJty8X0A1PlNj8uSHZkKNGsFqDFxR5K', 'Exploring the world now a days!', 'uploads/profile/8-665c9cc3bd6be5.60399648.jpg'),
 (9, 'Jerry', 'jerry@gmail.com', '$2y$10$xcZ8nK0bYF2Oo0nhJ14rFeGW38hEaSi35Dl3D1ounQkoLokrFBbY2', 'Life is better with life again and again', 'uploads/profile/9-665ca48672a077.09061530.jpg'),
@@ -112,11 +164,24 @@ INSERT INTO `users` (`id`, `name`, `email`, `password`, `about`, `profile_pictur
 --
 
 --
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `followers`
 --
 ALTER TABLE `followers`
   ADD PRIMARY KEY (`id`) USING BTREE,
   ADD UNIQUE KEY `user_id` (`user_id`,`follower_id`);
+
+--
+-- Indexes for table `likes`
+--
+ALTER TABLE `likes`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `post_id` (`post_id`,`user_id`);
 
 --
 -- Indexes for table `posts`
@@ -137,16 +202,28 @@ ALTER TABLE `users`
 --
 
 --
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
 -- AUTO_INCREMENT for table `followers`
 --
 ALTER TABLE `followers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
+-- AUTO_INCREMENT for table `likes`
+--
+ALTER TABLE `likes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
 
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `users`

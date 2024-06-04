@@ -140,3 +140,11 @@ const deletePost = async (postId) => {
         alert("An error occured while deleting post!", e);
     }
 }
+
+const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+        alert('Copied to clipboard!');
+    }).catch((e) => {
+        alert("An error occured while coping: ", e)
+    })
+}

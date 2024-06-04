@@ -82,7 +82,12 @@ $post_id = $_GET["post_id"];
                                 <div class="card mb-3">
                                     <div class="d-flex p-3 mb-0">
                                         <div class="d-flex align-items-center" style="width: 70%;">
-                                            <img width="60" height="60" class="rounded-circle" src="<?php echo $user_row["profile_picture"] ?>" alt="">
+                                            <?php
+                                            if ($user_row["profile_picture"] == "") { ?>
+                                                <img width="60" height="60" class="rounded-circle" src="img/icons/user-icon.png" alt="">
+                                            <?php } else { ?>
+                                                <img width="60" height="60" class="rounded-circle" src="<?php echo $user_row["profile_picture"] ?>" alt="">
+                                            <?php } ?>
                                             <span class="mx-3">
                                                 <a href="profile.php?user_id=<?php echo $user_row["id"] ?>" style="text-decoration: none;" class="card-text text-black fw-bold m-0"><?php echo $user_row["name"] ?></a>
                                                 <p class="card-text text-secondary m-0"><?php echo $user_row["about"] ?></p>
@@ -157,7 +162,12 @@ $post_id = $_GET["post_id"];
                                                 ?>
                                             </p>
                                         </button>
-                                        <button class="bg-transparent border-0"><img width="25" height="25" class="mx-2" src="img/icons/share-icon.png" alt=""></button>
+                                        <?php
+                                        // Get post link =>
+                                        $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+                                        $post_url = $protocol . "://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "?post_id=" . $row["id"];
+                                        ?>
+                                        <button onclick="copyToClipboard('<?php echo $post_url ?>')" class="bg-transparent border-0"><img width="25" height="25" class="mx-2" src="img/icons/share-icon.png" alt=""></button>
                                         <button class="mx-1 bg-transparent border-0"><img width="25" height="25" class="mx-2" src="img/icons/comment-icon.png" alt=""></button>
                                         <button class="mx-1 bg-transparent border-0"><img width="25" height="25" class="mx-2" src="img/icons/view-icon.png" alt=""></button>
                                     </div>

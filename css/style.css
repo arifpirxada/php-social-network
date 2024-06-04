@@ -215,6 +215,11 @@ img.profile-photo-lg{
     width: 48% !important;
 }
 
+.follow-insights {
+    text-decoration: none;
+    color: black;
+}
+
 @media only screen and (max-width: 992px) {
     #profile-sub-container {
         min-width: 2vw;
@@ -262,4 +267,12 @@ img.profile-photo-lg{
     .registration-form {
         width: 92vw;
     }
+}
+
+/* Followers, following & browse users page => */
+
+.follow-insight-user-img {
+    border: 3px orange solid;
+    height: 100px;
+    width: 100px;
 }

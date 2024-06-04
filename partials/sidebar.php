@@ -14,38 +14,55 @@
     <div class="explore position-fixed bg-white my-4 shadow-sm rounded p-4">
       <h3 class="mb-1">Explore</h3>
 
-      <a href="#" class="user-item">
-        <div class="d-flex align-items-center">
-          <img width="60" height="60" class="rounded-circle" src="./img/users/user-1.jpg" alt="">
-          <span class="mx-3">
-            <p class="fw-bold m-0">Henry</p>
-            <p class="text-secondary m-0">Exploring the world...</p>
-          </span>
-        </div>
-      </a>
+      <!-- FETCH USERS HERE => -->
 
-      <a href="#" class="user-item">
-        <div class="d-flex align-items-center">
-          <img width="60" height="60" class="rounded-circle" src="./img/users/user-2.jpg" alt="">
-          <span class="mx-3">
-            <p class="fw-bold m-0">Jerry</p>
-            <p class="text-secondary m-0">Life is better with ...</p>
-          </span>
-        </div>
-      </a>
-
-      <a href="#" class="user-item">
-        <div class="d-flex align-items-center">
-          <img width="60" height="60" class="rounded-circle" src="./img/users/user-3.jpg" alt="">
-          <span class="mx-3">
-            <p class="fw-bold m-0">Justin</p>
-            <p class="text-secondary m-0">Not all who wander...</p>
-          </span>
-        </div>
-      </a>
+      <?php
+      $sql = "SELECT * FROM users LIMIT 3";
+      $result = mysqli_query($con, $sql);
+      if (!$result) {
+        echo "No user found!";
+      } else {
+        while ($row = mysqli_fetch_assoc($result)) {
+      ?>
+          <a href="profile.php?user_id=<?php echo $row["id"] ?>" class="user-item">
+            <div class="d-flex align-items-center">
+              <?php
+              if ($row["profile_picture"] == "") { ?>
+                <a href="profile.php?user_id=<?php echo $row["id"] ?>">
+                  <img width="60" height="60" class="rounded-circle" src="img/icons/user-icon.png" alt="">
+                </a>
+              <?php } else { ?>
+                <a href="profile.php?user_id=<?php echo $row["id"] ?>">
+                  <img width="60" height="60" class="rounded-circle" src="<?php echo $row["profile_picture"] ?>" alt="">
+                </a>
+              <?php } ?>
+              <span class="mx-3">
+                <p class="fw-bold m-0">
+                  <?php
+                  if (strlen($row["name"]) > 10) {
+                    echo substr($row["name"], 0, 10) . "...";
+                  } else {
+                    echo $row["name"];
+                  }
+                  ?>
+                </p>
+                <p class="text-secondary m-0">
+                  <?php
+                  if (strlen($row["about"]) > 18) {
+                    echo substr($row["about"], 0, 18) . "...";
+                  } else {
+                    echo $row["about"];
+                  }
+                  ?>
+                </p>
+              </span>
+            </div>
+          </a>
+      <?php }
+      } ?>
 
       <div class="d-flex justify-content-center mt-2">
-        <a class="text-al" href="#">Browse more &rarr;</a>
+        <a class="text-al" href="browse-users.php">Browse more &rarr;</a>
       </div>
     </div>
   <?php } ?>

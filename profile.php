@@ -252,7 +252,7 @@
                       <p class="mb-1 h5"><?php echo $num_of_posts ?></p>
                       <p class="small text-muted mb-0">Posts</p>
                     </div>
-                    <div class="px-3">
+                    <a class="follow-insights px-3" href="followers.php?user_id=<?php echo $current_user_id ?>">
                       <?php
                       // Fetch no of followers =>
                       $sql = "SELECT COUNT(*) AS num_of_followers FROM followers WHERE user_id = '$current_user_id'";
@@ -266,8 +266,8 @@
                       ?>
                       <p class="mb-1 h5"><?php echo $num_of_followers ?></p>
                       <p class="small text-muted mb-0">Followers</p>
-                    </div>
-                    <div>
+                    </a>
+                    <a class="follow-insights" href="following.php?user_id=<?php echo $current_user_id ?>">
                       <?php
                       // Fetch no of following =>
                       $sql = "SELECT COUNT(*) AS num_of_following FROM followers WHERE follower_id = '$current_user_id'";
@@ -281,7 +281,7 @@
                       ?>
                       <p class="mb-1 h5"><?php echo $num_of_following ?></p>
                       <p class="small text-muted mb-0">Following</p>
-                    </div>
+                    </a>
                   </div>
                 </div>
                 <div class="card-body p-4 text-black">

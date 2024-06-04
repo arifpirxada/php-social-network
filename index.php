@@ -105,17 +105,22 @@
 
         <?php
         // Show posts here =>
-        
+
         $carousel_index = 0;
-        foreach ($posts_array as $key => $value) { 
-          $carousel_index ++;
-          ?>
+        foreach ($posts_array as $key => $value) {
+          $carousel_index++;
+        ?>
           <div class="post-item">
             <div class="card mb-3">
 
               <div class="d-flex p-3 mb-0">
                 <div class="d-flex align-items-center" style="width: 70%;">
-                  <img width="60" height="60" class="rounded-circle" src="<?php echo $posts_array[$key]["user"]["profile_picture"] ?>" alt="profile image">
+                  <?php
+                  if ($posts_array[$key]["user"]["profile_picture"] == "") { ?>
+                    <img width="60" height="60" class="rounded-circle" src="img/icons/user-icon.png" alt="profile image">
+                  <?php } else { ?>
+                    <img width="60" height="60" class="rounded-circle" src="<?php echo $posts_array[$key]["user"]["profile_picture"] ?>" alt="profile image">
+                  <?php } ?>
                   <span class="mx-3">
                     <a href="profile.php?user_id=<?php echo $posts_array[$key]['user']['id'] ?>" style="text-decoration: none;" class="card-text text-black fw-bold m-0"><?php echo $posts_array[$key]["user"]["name"] ?></a>
                     <p class="card-text text-secondary m-0"><?php echo $posts_array[$key]["user"]["about"] ?></p>
@@ -162,14 +167,14 @@
               if ($posts_array[$key]["heading"] != "" || $posts_array[$key]["content"] != "") { ?>
                 <div class="card-body">
                   <h5 class="card-title"><?php echo substr($posts_array[$key]["heading"], 0, 50);
-                  if ($posts_array[$key]["heading"] != "" && strlen($posts_array[$key]["heading"]) > 50) {
-                    echo "...";
-                  } ?></h5>
+                                          if ($posts_array[$key]["heading"] != "" && strlen($posts_array[$key]["heading"]) > 50) {
+                                            echo "...";
+                                          } ?></h5>
                   <p class="card-text"><?php echo substr($posts_array[$key]["content"], 0, 250);
-                  if ($posts_array[$key]["content"] != "" && strlen($posts_array[$key]["content"]) > 250) {
-                    echo "...";
-                  }
-                  ?></p>
+                                        if ($posts_array[$key]["content"] != "" && strlen($posts_array[$key]["content"]) > 250) {
+                                          echo "...";
+                                        }
+                                        ?></p>
                 </div>
               <?php } ?>
 
@@ -197,7 +202,12 @@
                     ?>
                   </p>
                 </button>
-                <button class="bg-transparent border-0"><img width="25" height="25" class="mx-2" src="img/icons/share-icon.png" alt=""></button>
+                <?php
+                // Get post link =>
+                $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+                $post_url = $protocol . "://" . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"] . "?post_id=" . $posts_array[$key]["id"];
+                ?>
+                <button onclick="copyToClipboard('<?php echo $post_url ?>')" class="bg-transparent border-0"><img width="25" height="25" class="mx-2" src="img/icons/share-icon.png" alt=""></button>
                 <a href="posts.php?post_id=<?php echo $posts_array[$key]['id']; ?>" style="text-decoration: none; color: black" class="mx-1 bg-transparent border-0"><img width="25" height="25" class="mx-2" src="img/icons/comment-icon.png" alt=""></a>
                 <a href="posts.php?post_id=<?php echo $posts_array[$key]['id']; ?>" style="text-decoration: none; color: black" class="mx-1 bg-transparent border-0"><img width="25" height="25" class="mx-2" src="img/icons/view-icon.png" alt=""></a>
               </div>

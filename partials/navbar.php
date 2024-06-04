@@ -36,7 +36,7 @@ require "dbcon.php";
               <li>
                 <hr class="dropdown-divider">
               </li>
-              <li><a class="dropdown-item" href="create-posts.php"><img class="mx-1" src="img/icons/create-post-icon.png" width="23" height="23"
+              <li><a class="dropdown-item" href="create-post.php"><img class="mx-1" src="img/icons/create-post-icon.png" width="23" height="23"
                     alt="icon">Create Post</a></li>
             </ul>
           </div>

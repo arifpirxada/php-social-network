@@ -3,17 +3,36 @@
     padding: 0;
 }
 
+/* universal */
+
+.c-pointer {
+    cursor: pointer !important;
+}
+
+/* Navbar =>
+ */
 .navbar {
     width: 100vw;
     z-index: 100;
 }
 
+#message-notifications {
+    min-width: 5px;
+    height: 20px;
+    padding: 5px;
+    background: linear-gradient(red, rgb(174, 21, 21));
+    border-radius: 50px;
+    color: #ffffff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    left: 12px;
+    top: -7px;
+}
+
 /* sidebar styling */
 
-/* .sidebar-container {
-    right: 14vw;
-    top: 4rem;
-} */
 
 .sidebar {
     margin-top: 2rem;

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 03, 2024 at 08:21 PM
+-- Generation Time: Jun 05, 2024 at 10:31 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -100,6 +100,41 @@ INSERT INTO `likes` (`id`, `post_id`, `user_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `messages`
+--
+
+CREATE TABLE `messages` (
+  `id` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `receiver_id` int(11) NOT NULL,
+  `date` datetime NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `messages`
+--
+
+INSERT INTO `messages` (`id`, `message`, `sender_id`, `receiver_id`, `date`) VALUES
+(24, 'Hi', 8, 6, '2024-06-06 01:57:21'),
+(25, 'Hello', 8, 6, '2024-06-06 02:00:07');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `type` varchar(20) NOT NULL,
+  `refrence_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `posts`
 --
 
@@ -131,6 +166,31 @@ INSERT INTO `posts` (`id`, `heading`, `content`, `file_json_array`, `user_id`, `
 (16, 'The Quick Brown Fox Jumps Over the Lazy Dog', 'This is a classic example of a pangram, a sentence containing every letter of the alphabet. But why &quot;the quick brown fox jumps over the lazy dog&quot;?  The exact origin is debated, but some theories suggest it was used for testing typewriters and keyboards.', '[]', 5, '2024-06-02 22:32:12'),
 (26, 'Reflections on Old Age', 'Old age is a phase of life often overlooked in the rush of modernity. Yet, it holds a quiet beauty, a depth of experience unmatched by any other stage. In its silence, old age speaks volumes, whispering tales of a lifetime lived.', '[]', 10, '2024-06-02 22:43:41'),
 (27, '', 'The wrinkles etched upon weathered skin are not marks of decline but badges of honor, earned through years of laughter and tears. Each line tells a story, a chapter in the book of a person\'s journey.', '[\"uploads\\/posts\\/10-665ca866156aa2.05480102.jpg\"]', 10, '2024-06-02 22:44:14');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `recents`
+--
+
+CREATE TABLE `recents` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `recent_user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `recents`
+--
+
+INSERT INTO `recents` (`id`, `user_id`, `recent_user_id`) VALUES
+(14, 6, 7),
+(15, 6, 8),
+(11, 8, 6),
+(9, 8, 7),
+(4, 8, 9),
+(7, 8, 10),
+(13, 9, 6);
 
 -- --------------------------------------------------------
 
@@ -184,10 +244,30 @@ ALTER TABLE `likes`
   ADD UNIQUE KEY `post_id` (`post_id`,`user_id`);
 
 --
+-- Indexes for table `messages`
+--
+ALTER TABLE `messages`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `posts`
 --
 ALTER TABLE `posts`
   ADD PRIMARY KEY (`id`);
+ALTER TABLE `posts` ADD FULLTEXT KEY `Search index` (`heading`,`content`);
+
+--
+-- Indexes for table `recents`
+--
+ALTER TABLE `recents`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `user_id` (`user_id`,`recent_user_id`);
 
 --
 -- Indexes for table `users`
@@ -220,10 +300,28 @@ ALTER TABLE `likes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
 
 --
+-- AUTO_INCREMENT for table `messages`
+--
+ALTER TABLE `messages`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
+-- AUTO_INCREMENT for table `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+
+--
+-- AUTO_INCREMENT for table `recents`
+--
+ALTER TABLE `recents`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `users`

@@ -35,7 +35,7 @@ require "dbcon.php";
     data = JSON.parse(e.data);
     let messageBox = document.getElementById("message-box");
 
-    if (selectedUserId != null && messageBox != null) {
+    if (selectedUserId != null && selectedUserId == data.sender && messageBox != null) {
       messageBox.insertAdjacentHTML("beforeend", `
       <div class="incoming_msg">
           <div class="received_msg my-3">

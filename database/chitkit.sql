@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jun 05, 2024 at 10:31 PM
+-- Generation Time: Jun 06, 2024 at 01:11 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -44,7 +44,8 @@ INSERT INTO `comments` (`id`, `comment`, `post_id`, `user_id`, `user_name`, `dat
 (1, 'Great', 27, 8, 'Henry', '2024-06-03 22:40:21'),
 (2, 'Nice post', 27, 8, 'Henry', '2024-06-03 22:43:32'),
 (3, 'Very true', 26, 8, 'Henry', '2024-06-03 22:46:01'),
-(4, 'So beautiful', 1, 8, 'Henry', '2024-06-03 22:46:54');
+(4, 'So beautiful', 1, 8, 'Henry', '2024-06-03 22:46:54'),
+(9, 'Nice video', 31, 9, 'Jerry', '2024-06-06 16:19:20');
 
 -- --------------------------------------------------------
 
@@ -71,7 +72,8 @@ INSERT INTO `followers` (`id`, `user_id`, `follower_id`) VALUES
 (9, 7, 5),
 (6, 7, 8),
 (10, 7, 10),
-(8, 8, 9);
+(8, 8, 9),
+(14, 9, 8);
 
 -- --------------------------------------------------------
 
@@ -92,10 +94,20 @@ CREATE TABLE `likes` (
 INSERT INTO `likes` (`id`, `post_id`, `user_id`) VALUES
 (10, 3, 10),
 (11, 4, 10),
+(183, 15, 7),
+(182, 16, 7),
 (7, 26, 8),
 (9, 26, 10),
+(178, 27, 9),
 (12, 28, 8),
-(8, 28, 10);
+(8, 28, 10),
+(181, 31, 7),
+(176, 31, 8),
+(177, 31, 9),
+(180, 36, 7),
+(184, 36, 9),
+(186, 37, 8),
+(185, 37, 9);
 
 -- --------------------------------------------------------
 
@@ -117,7 +129,14 @@ CREATE TABLE `messages` (
 
 INSERT INTO `messages` (`id`, `message`, `sender_id`, `receiver_id`, `date`) VALUES
 (24, 'Hi', 8, 6, '2024-06-06 01:57:21'),
-(25, 'Hello', 8, 6, '2024-06-06 02:00:07');
+(25, 'Hello', 8, 6, '2024-06-06 02:00:07'),
+(26, 'Hi', 8, 7, '2024-06-06 14:34:22'),
+(27, 'Hello', 7, 8, '2024-06-06 14:34:40'),
+(28, 'Who are you', 7, 8, '2024-06-06 14:34:47'),
+(29, 'this is a test message', 8, 7, '2024-06-06 14:34:56'),
+(30, 'Who are you talking to', 6, 8, '2024-06-06 14:35:28'),
+(31, 'Are you online', 6, 8, '2024-06-06 14:38:23'),
+(32, 'what are you doing', 6, 8, '2024-06-06 14:38:42');
 
 -- --------------------------------------------------------
 
@@ -161,11 +180,13 @@ INSERT INTO `posts` (`id`, `heading`, `content`, `file_json_array`, `user_id`, `
 (11, 'Dream It, See It: AI Art Generation Takes Off', 'AI image generators are turning words into stunning visuals. Simply describe your concept, and the AI creates a unique image, from photorealistic landscapes to fantastical creatures.', '[\"uploads\\/posts\\/8-665c9f3b9a3d34.50098048.jpg\",\"uploads\\/posts\\/8-665c9f3b9a52b8.54978060.jpg\",\"uploads\\/posts\\/8-665c9f3b9a6074.82402101.jpg\"]', 8, '2024-06-02 22:08:10'),
 (12, '', '', '[\"uploads\\/posts\\/8-665c9f704ca652.27229356.jpg\"]', 8, '2024-06-02 22:08:10'),
 (13, 'Coffee brewing, notes open, mind focused.   Crushing this study session!  Who\'s with me?  #studygram #motivated #examscoming', '', '[\"uploads\\/posts\\/8-665c9fa94d6598.61486597.jpg\"]', 8, '2024-06-02 22:08:10'),
-(14, 'Quiz Time! Ace that Test with these Fun Study Tips', 'Cramming got you stressed? Ditch the all-nighters and try these active study methods:', '[\"uploads\\/posts\\/9-665ca09dcaebb3.09051742.png\"]', 9, '2024-06-02 22:11:01'),
 (15, 'My AI version 😊', '', '[\"uploads\\/posts\\/9-665ca1282a1401.85043559.jpg\"]', 9, '2024-06-02 22:13:20'),
 (16, 'The Quick Brown Fox Jumps Over the Lazy Dog', 'This is a classic example of a pangram, a sentence containing every letter of the alphabet. But why &quot;the quick brown fox jumps over the lazy dog&quot;?  The exact origin is debated, but some theories suggest it was used for testing typewriters and keyboards.', '[]', 5, '2024-06-02 22:32:12'),
 (26, 'Reflections on Old Age', 'Old age is a phase of life often overlooked in the rush of modernity. Yet, it holds a quiet beauty, a depth of experience unmatched by any other stage. In its silence, old age speaks volumes, whispering tales of a lifetime lived.', '[]', 10, '2024-06-02 22:43:41'),
-(27, '', 'The wrinkles etched upon weathered skin are not marks of decline but badges of honor, earned through years of laughter and tears. Each line tells a story, a chapter in the book of a person\'s journey.', '[\"uploads\\/posts\\/10-665ca866156aa2.05480102.jpg\"]', 10, '2024-06-02 22:44:14');
+(27, '', 'The wrinkles etched upon weathered skin are not marks of decline but badges of honor, earned through years of laughter and tears. Each line tells a story, a chapter in the book of a person\'s journey.', '[\"uploads\\/posts\\/10-665ca866156aa2.05480102.jpg\"]', 10, '2024-06-02 22:44:14'),
+(31, '', '', '[\"uploads\\/posts\\/8-666193bfe4c152.27915583.mp4\",\"uploads\\/posts\\/8-666193bfe4d950.81233222.mp4\"]', 8, '2024-06-06 16:17:27'),
+(36, '', '', '[\"uploads\\/posts\\/7-666197f832d964.26526646.png\",\"uploads\\/posts\\/7-666197f832efc1.50396633.mp4\"]', 7, '2024-06-06 16:35:28'),
+(37, '', '', '[\"uploads\\/posts\\/9-666198e8202ca0.03545139.png\"]', 9, '2024-06-06 16:39:28');
 
 -- --------------------------------------------------------
 
@@ -186,6 +207,7 @@ CREATE TABLE `recents` (
 INSERT INTO `recents` (`id`, `user_id`, `recent_user_id`) VALUES
 (14, 6, 7),
 (15, 6, 8),
+(16, 7, 8),
 (11, 8, 6),
 (9, 8, 7),
 (4, 8, 9),
@@ -285,25 +307,25 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `comments`
 --
 ALTER TABLE `comments`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `followers`
 --
 ALTER TABLE `followers`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `likes`
 --
 ALTER TABLE `likes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=176;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=187;
 
 --
 -- AUTO_INCREMENT for table `messages`
 --
 ALTER TABLE `messages`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- AUTO_INCREMENT for table `notifications`
@@ -315,13 +337,13 @@ ALTER TABLE `notifications`
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `recents`
 --
 ALTER TABLE `recents`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `users`

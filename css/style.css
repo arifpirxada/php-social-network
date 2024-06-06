@@ -68,6 +68,13 @@
 
 /* posts styling */
 
+.carousel-btn {
+    height: 20%;
+    top: 35%;
+    background-color: rgba(0, 0, 0, 0.037);
+    border-radius: 5px;
+}
+
 .explore {
     max-height: 60vh !important;
     overflow-y: scroll;

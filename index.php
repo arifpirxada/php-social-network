@@ -24,7 +24,7 @@
 
         <?php
         // Fetch posts =>
-
+        $video_file_types = array("mp4", "mkv", "mov", "webm", "avi");
         $posts_array = [];
 
         $sql = "SELECT * FROM posts ORDER BY post_date DESC";
@@ -131,31 +131,92 @@
               </div>
               <?php
               $len = count($posts_array[$key]["file_paths"]);
-              if ($len == 1) { ?>
-                <img class="mt-3" src="<?php echo $posts_array[$key]["file_paths"][0] ?>" alt="...">
+              if ($len == 1) {
+                $extention = explode(".", $posts_array[$key]["file_paths"][0]);
+                $extention = strtolower(end($extention));
+                if (in_array($extention, $video_file_types)) {
+              ?>
+                  <video class="mt-3" controls>
+                    <source src="<?php echo $posts_array[$key]["file_paths"][0] ?>" type="
+                    <?php
+                    if ($extention == "mp4") {
+                      echo "video/mp4";
+                    } elseif ($extention == "mkv") {
+                      echo "video/mkv";
+                    } elseif ($extention == "mov") {
+                      echo "video/mov";
+                    } elseif ($extention == "webm") {
+                      echo "video/webm";
+                    } elseif ($extention == "avi") {
+                      echo "video/avi";
+                    }
+                    ?>">
+                    Your browser does not support the video tag.
+                  </video>
+                <?php
+                } else {
+                ?>
+                  <img class="mt-3" src="<?php echo $posts_array[$key]["file_paths"][0] ?>" alt="...">
+                <?php
+                }
+                ?>
               <?php } elseif ($len > 1) { ?>
 
                 <!-- SLIDER => -->
                 <div id="carousel<?php echo $carousel_index ?>" class="carousel slide">
                   <div class="carousel-inner">
                     <?php
-                    foreach ($posts_array[$key]["file_paths"] as $index => $img) { ?>
-                      <div class="carousel-item 
+                    foreach ($posts_array[$key]["file_paths"] as $index => $img) {
+                      $extention = explode(".", $posts_array[$key]["file_paths"][$index]);
+                      $extention = strtolower(end($extention));
+                      if (in_array($extention, $video_file_types)) {
+                    ?>
+                        <div class="carousel-item 
+                    <?php
+                        if ($index == 0) {
+                          echo "active";
+                        }
+                    ?>">
+                          <video class="mt-3 w-100" controls>
+                            <!-- "mp4", "mkv", "mov", "webm", "avi" -->
+                            <source src="<?php echo $posts_array[$key]["file_paths"][$index] ?>" type="
+                            <?php
+                            if ($extention == "mp4") {
+                              echo "video/mp4";
+                            } elseif ($extention == "mkv") {
+                              echo "video/mkv";
+                            } elseif ($extention == "mov") {
+                              echo "video/mov";
+                            } elseif ($extention == "webm") {
+                              echo "video/webm";
+                            } elseif ($extention == "avi") {
+                              echo "video/avi";
+                            }
+                            ?>">
+                            Your browser does not support the video tag.
+                          </video>
+                        </div>
+
+                      <?php } else {
+                      ?>
+                        <div class="carousel-item 
                       <?php
-                      if ($index == 0) {
-                        echo "active";
-                      }
+                        if ($index == 0) {
+                          echo "active";
+                        }
                       ?>">
-                        <img src="<?php echo $posts_array[$key]["file_paths"][$index] ?>" class="d-block w-100" alt="...">
-                      </div>
-                    <?php } ?>
+                          <img src="<?php echo $posts_array[$key]["file_paths"][$index] ?>" class="d-block w-100" alt="...">
+                        </div>
+                    <?php
+                      }
+                    } ?>
 
                   </div>
-                  <button class="carousel-control-prev" type="button" data-bs-target="#carousel<?php echo $carousel_index ?>" data-bs-slide="prev">
+                  <button class="carousel-btn carousel-control-prev" type="button" data-bs-target="#carousel<?php echo $carousel_index ?>" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Previous</span>
                   </button>
-                  <button class="carousel-control-next" type="button" data-bs-target="#carousel<?php echo $carousel_index ?>" data-bs-slide="next">
+                  <button class="carousel-btn carousel-control-next" type="button" data-bs-target="#carousel<?php echo $carousel_index ?>" data-bs-slide="next">
                     <span class="carousel-control-next-icon" aria-hidden="true"></span>
                     <span class="visually-hidden">Next</span>
                   </button>
@@ -166,15 +227,17 @@
               <?php
               if ($posts_array[$key]["heading"] != "" || $posts_array[$key]["content"] != "") { ?>
                 <div class="card-body">
-                  <h5 class="card-title"><?php echo substr($posts_array[$key]["heading"], 0, 50);
-                                          if ($posts_array[$key]["heading"] != "" && strlen($posts_array[$key]["heading"]) > 50) {
-                                            echo "...";
-                                          } ?></h5>
-                  <p class="card-text"><?php echo substr($posts_array[$key]["content"], 0, 250);
-                                        if ($posts_array[$key]["content"] != "" && strlen($posts_array[$key]["content"]) > 250) {
-                                          echo "...";
-                                        }
-                                        ?></p>
+                  <h5 class="card-title">
+                    <?php echo substr($posts_array[$key]["heading"], 0, 50);
+                    if ($posts_array[$key]["heading"] != "" && strlen($posts_array[$key]["heading"]) > 50) {
+                      echo "...";
+                    } ?></h5>
+                  <p class="card-text">
+                    <?php echo substr($posts_array[$key]["content"], 0, 250);
+                    if ($posts_array[$key]["content"] != "" && strlen($posts_array[$key]["content"]) > 250) {
+                      echo "...";
+                    }
+                    ?></p>
                 </div>
               <?php } ?>
 

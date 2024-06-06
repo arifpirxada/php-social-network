@@ -28,6 +28,8 @@ $post_id = $_GET["post_id"];
             <div class="container posts-container mt-4">
 
                 <?php
+                $video_file_types = array("mp4", "mkv", "mov", "webm", "avi");
+
                 // fetch post details here =>
                 $sql = "SELECT * FROM posts WHERE id = '$post_id'";
                 $result = mysqli_query($con, $sql);
@@ -100,7 +102,28 @@ $post_id = $_GET["post_id"];
                                     <!-- Post images => -->
                                     <?php
                                     $len = count($file_paths);
-                                    if ($len == 1) { ?>
+                                    if ($len == 1) {
+                                        $extention = explode(".", $file_paths[0]);
+                                        $extention = strtolower(end($extention));
+                                        if (in_array($extention, $video_file_types)) { ?>
+                                            <video class="mt-3 w-100" controls>
+                                                <source src="<?php echo $file_paths[0] ?>" type="
+                                                <?php
+                                                if ($extention == "mp4") {
+                                                    echo "video/mp4";
+                                                } elseif ($extention == "mkv") {
+                                                    echo "video/mkv";
+                                                } elseif ($extention == "mov") {
+                                                    echo "video/mov";
+                                                } elseif ($extention == "webm") {
+                                                    echo "video/webm";
+                                                } elseif ($extention == "avi") {
+                                                    echo "video/avi";
+                                                }
+                                                ?>">
+                                                Your browser does not support the video tag.
+                                            </video>
+                                        <?php } ?>
                                         <img class="mt-3" src="<?php echo $file_paths[0] ?>" alt="...">
                                     <?php } elseif ($len > 1) { ?>
 
@@ -108,23 +131,56 @@ $post_id = $_GET["post_id"];
                                         <div id="carouselExample" class="carousel slide">
                                             <div class="carousel-inner">
                                                 <?php
-                                                foreach ($file_paths as $index => $img) { ?>
-                                                    <div class="carousel-item 
+                                                foreach ($file_paths as $index => $img) {
+                                                    $extention = explode(".", $file_paths[$index]);
+                                                    $extention = strtolower(end($extention));
+                                                    if (in_array($extention, $video_file_types)) {
+                                                ?>
+                                                        <div class="carousel-item 
+                                                            <?php
+                                                            if ($index == 0) {
+                                                                echo "active";
+                                                            }
+                                                            ?>">
+                                                            <video class="mt-3 w-100" controls>
+                                                                <source src="<?php echo $file_paths[$index] ?>" type="
+                                                                <?php
+                                                                if ($extention == "mp4") {
+                                                                    echo "video/mp4";
+                                                                } elseif ($extention == "mkv") {
+                                                                    echo "video/mkv";
+                                                                } elseif ($extention == "mov") {
+                                                                    echo "video/mov";
+                                                                } elseif ($extention == "webm") {
+                                                                    echo "video/webm";
+                                                                } elseif ($extention == "avi") {
+                                                                    echo "video/avi";
+                                                                }
+                                                                ?>">
+                                                                Your browser does not support the video tag.
+                                                            </video>
+                                                        </div>
                                                     <?php
-                                                    if ($index == 0) {
-                                                        echo "active";
-                                                    }
+                                                    } else {
+
+                                                    ?>
+                                                        <div class="carousel-item 
+                                                    <?php
+                                                        if ($index == 0) {
+                                                            echo "active";
+                                                        }
                                                     ?>">
-                                                        <img src="<?php echo $file_paths[$index] ?>" class="d-block w-100" alt="...">
-                                                    </div>
-                                                <?php } ?>
+                                                            <img src="<?php echo $file_paths[$index] ?>" class="d-block w-100" alt="...">
+                                                        </div>
+                                                <?php }
+                                                } ?>
 
                                             </div>
-                                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+                                            <button class="carousel-btn carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
                                                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                                 <span class="visually-hidden">Previous</span>
                                             </button>
-                                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+                                            <button class="carousel-btn carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
                                                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                                 <span class="visually-hidden">Next</span>
                                             </button>

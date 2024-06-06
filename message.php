@@ -283,7 +283,7 @@
                                 if (isset($_GET["limit"])) {
                                     $message_limit = $_GET["limit"];
                                 }
-                                $sql = "SELECT * FROM `messages` WHERE (sender_id = '$user_id' AND receiver_id = '$selected_user_id') OR (sender_id = '$selected_user_id' AND receiver_id = '$user_id') ORDER BY date DESC LIMIT $message_limit";
+                                $sql = "SELECT * FROM `messages` WHERE (sender_id = '$user_id' AND receiver_id = '$selected_user_id') OR (sender_id = '$selected_user_id' AND receiver_id = '$user_id') ORDER BY date ASC LIMIT $message_limit";
                                 $result = mysqli_query($con, $sql);
 
                                 if (!$result) {

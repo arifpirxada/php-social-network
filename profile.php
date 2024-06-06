@@ -68,7 +68,6 @@
             }
           }
         }
-
       }
     } // isset curly bracket
 
@@ -115,6 +114,7 @@
 
   <?php
   // Fetch user posts
+  $video_file_types = array("mp4", "mkv", "mov", "webm", "avi");
 
   $media_posts = [];
   $note_posts = [];
@@ -310,7 +310,34 @@
                         foreach ($media_posts as $key => $value) {
                           if (isset($media_posts[$key]["file_paths"][0])) { ?>
                             <a href="posts.php?post_id=<?php echo $media_posts[$key]["id"] ?>" class="w-48">
-                              <img src="<?php echo $media_posts[$key]["file_paths"][0] ?>" alt="post image" class="w-100 rounded-1">
+                              <?php
+                              $extention = explode(".", $media_posts[$key]["file_paths"][0]);
+                              $extention = strtolower(end($extention));
+                              if (in_array($extention, $video_file_types)) {
+                              ?>
+                                <video class="mt-3 w-100" controls>
+                                  <!-- "mp4", "mkv", "mov", "webm", "avi" -->
+                                  <source src="<?php echo $media_posts[$key]["file_paths"][0] ?>" type="
+                            <?php
+                                if ($extention == "mp4") {
+                                  echo "video/mp4";
+                                } elseif ($extention == "mkv") {
+                                  echo "video/mkv";
+                                } elseif ($extention == "mov") {
+                                  echo "video/mov";
+                                } elseif ($extention == "webm") {
+                                  echo "video/webm";
+                                } elseif ($extention == "avi") {
+                                  echo "video/avi";
+                                }
+                            ?>">
+                                  Your browser does not support the video tag.
+                                </video <?php
+                                      } else {
+                                        ?> <img src="<?php echo $media_posts[$key]["file_paths"][0] ?>" alt="post image" class="w-100 rounded-1">
+                              <?php
+                                      }
+                              ?>
                             </a>
                         <?php }
                         } ?>

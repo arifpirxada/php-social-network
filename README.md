@@ -10,3 +10,8 @@ Once Composer is installed, navigate to the project directory in your terminal a
 
 ```bash
 composer install
+```
+
+## Demo video
+
+Here is a demonstration video: <a href="https://drive.google.com/file/d/1IbLYhmB6uHafKIhuYJ8oE8vWkdp0iMTg/view?usp=sharing" target="_blank">Watch Video</a>

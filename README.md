@@ -14,4 +14,4 @@ composer install
 
 ## Demo video
 
-Here is a demonstration video: <a href="https://drive.google.com/file/d/1IbLYhmB6uHafKIhuYJ8oE8vWkdp0iMTg/view?usp=sharing" target="_blank">Watch Video</a>
+Overview video of the website: <a href="https://drive.google.com/file/d/1IbLYhmB6uHafKIhuYJ8oE8vWkdp0iMTg/view?usp=sharing" target="_blank">Watch Video</a>

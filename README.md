@@ -12,6 +12,12 @@ Once Composer is installed, navigate to the project directory in your terminal a
 composer install
 ```
 
+Now, Run the WebSocket Server:
+
+```bash
+php bin/chat-server.php
+```
+
 ## Demo video
 
 Overview video of the website: <a href="https://drive.google.com/file/d/1IbLYhmB6uHafKIhuYJ8oE8vWkdp0iMTg/view?usp=sharing" target="_blank">Watch Video</a>
